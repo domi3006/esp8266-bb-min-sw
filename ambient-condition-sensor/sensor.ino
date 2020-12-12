@@ -67,7 +67,7 @@ void sensor::loop()
                 context->get_storage().update_value(storage_unit_temp, bme.readTemperature(), 0.1);
                 context->get_storage().update_value(storage_unit_pres,
                         (bme.readPressure()/100.0F), 0.5);
-                context->get_storage().update_value(storage_unit_hum, bme.readHumidity(), 1.0);
+                context->get_storage().update_value(storage_unit_hum, bme.readHumidity(), 0.7);
                 break;
             }
         case sensor_type::ADC:
