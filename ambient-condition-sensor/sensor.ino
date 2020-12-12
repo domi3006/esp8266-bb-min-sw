@@ -7,7 +7,6 @@
 #include "sensor.h"
 #include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
-#include <Wire.h>
 
 void sensor::setup(enum sensor_interface::sensor_interface intf,
         enum sensor_type::sensor_type typ, ambient_condition_sensor *cont,
@@ -26,20 +25,17 @@ void sensor::setup(enum sensor_interface::sensor_interface intf,
 void sensor::prepare_interface()
 {
     switch(interface) {
-        case sensor_interface::I2C_0:
+        case sensor_interface::I2C_2_14:
             {
-                pinMode(4, OUTPUT);
-                pinMode(5, OUTPUT);
-                digitalWrite(4, HIGH);
-                digitalWrite(5, LOW);
+                i2c.begin(2,14);
                 break;
             }
-        case sensor_interface::I2C_1:
+        case sensor_interface::I2C_4_5:
             {
-                pinMode(4, OUTPUT);
-                pinMode(5, OUTPUT);
-                digitalWrite(4, LOW);
-                digitalWrite(5, HIGH);
+                i2c.begin(4,5);
+                break;
+            }
+            {
                 break;
             }
         default:
@@ -51,12 +47,11 @@ void sensor::loop()
 {
     prepare_interface();
 
-    Wire.begin(2, 14);
     switch(type) {
         case sensor_type::BME_280:
             {
                 Adafruit_BME280 bme;
-                bme.begin(0x76);
+                bme.begin(0x76, &i2c);
                 delay(1000);
 
                 context->get_storage().update_value(storage_unit_temp, bme.readTemperature(), 0.1);

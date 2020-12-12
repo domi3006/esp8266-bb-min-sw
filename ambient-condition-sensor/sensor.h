@@ -6,6 +6,8 @@
 #ifndef _SENSOR_H_
 #define _SENSOR_H_
 
+#include <Wire.h>
+
 namespace storage_unit_type {
     enum storage_unit_type;
 }
@@ -20,8 +22,8 @@ namespace sensor_type {
 
 namespace sensor_interface {
     enum sensor_interface {
-        I2C_0 = 0,
-        I2C_1,
+        I2C_2_14 = 0,
+        I2C_4_5,
         LAST
     };
 }
@@ -35,6 +37,8 @@ private:
     enum storage_unit_type::storage_unit_type storage_unit_pres;
 
     void prepare_interface();
+
+    TwoWire i2c;
 
 protected:
     ambient_condition_sensor *context=nullptr;
