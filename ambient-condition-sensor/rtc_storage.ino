@@ -107,6 +107,9 @@ const char* RTC_storage::get_name(enum storage_unit_type::storage_unit_type type
         case storage_unit_type::PRESSURE_2:
             return "pressure2";
             break;
+        case storage_unit_type::VOLTAGE:
+            return "voltage";
+            break;
         default:
             return "ERROR";
             break;

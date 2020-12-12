@@ -21,6 +21,7 @@ namespace storage_unit_type {
         PRESSURE_0,
         PRESSURE_1,
         PRESSURE_2,
+        VOLTAGE,
         NONE
     };
 }
