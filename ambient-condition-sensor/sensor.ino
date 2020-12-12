@@ -5,8 +5,6 @@
 #include "ambient-condition-sensor.h"
 #include "rtc_storage.h"
 #include "sensor.h"
-#include <Adafruit_BME280.h>
-#include <Adafruit_Sensor.h>
 
 void sensor::setup(enum sensor_interface::sensor_interface intf,
         enum sensor_type::sensor_type typ, ambient_condition_sensor *cont,
@@ -22,6 +20,21 @@ void sensor::setup(enum sensor_interface::sensor_interface intf,
     storage_unit_hum = hum;
     storage_unit_pres = pres;
     storage_unit_volt = volt;
+
+        switch(type) {
+            case sensor_type::BME_280:
+                {
+                    prepare_interface();
+                    bme.begin(0x76, &i2c);
+                    bme.setSampling(Adafruit_BME280::MODE_FORCED, Adafruit_BME280::SAMPLING_X1,
+                            Adafruit_BME280::SAMPLING_X1, Adafruit_BME280::SAMPLING_X1,
+                            Adafruit_BME280::FILTER_OFF, Adafruit_BME280::STANDBY_MS_1000);
+                    bme.takeForcedMeasurement();
+                    break;
+                }
+            default:
+                break;
+        }
 }
 
 void sensor::prepare_interface()
@@ -48,15 +61,9 @@ void sensor::prepare_interface()
 
 void sensor::loop()
 {
-    prepare_interface();
-
     switch(type) {
         case sensor_type::BME_280:
             {
-                Adafruit_BME280 bme;
-                bme.begin(0x76, &i2c);
-                delay(1000);
-
                 context->get_storage().update_value(storage_unit_temp, bme.readTemperature(), 0.1);
                 context->get_storage().update_value(storage_unit_pres,
                         (bme.readPressure()/100.0F), 0.5);

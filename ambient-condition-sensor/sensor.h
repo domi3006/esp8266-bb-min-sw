@@ -6,6 +6,8 @@
 #ifndef _SENSOR_H_
 #define _SENSOR_H_
 
+#include <Adafruit_BME280.h>
+#include <Adafruit_Sensor.h>
 #include <Wire.h>
 
 namespace storage_unit_type {
@@ -42,6 +44,7 @@ private:
     void prepare_interface();
 
     TwoWire i2c;
+    Adafruit_BME280 bme;
 
 protected:
     ambient_condition_sensor *context=nullptr;
