@@ -32,7 +32,12 @@ void RTC_storage::setup(ambient_condition_sensor* cont)
 
 void RTC_storage::update_value(enum storage_unit_type::storage_unit_type type, float value, float difference)
 {
-    if(abs(value - values[type]) < difference)
+    float diff;
+
+    diff = value - values[type];
+    if(diff < 0)
+        diff = diff * -1.0F;
+    if(diff <= difference)
         return;
 
     values[type] = value;
