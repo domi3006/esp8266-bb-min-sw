@@ -6,7 +6,7 @@
 #include "sensor.h"
 #include "uploader.h"
 
-#define NO_SENSORS 1
+#define NO_SENSORS 2
 
 ambient_condition_sensor ambient_sensor;
 sensor sensors[NO_SENSORS];
@@ -40,9 +40,12 @@ void setup() {
     ambient_sensor.get_ctrl().setup(&ambient_sensor);
     ambient_sensor.get_storage().setup(&ambient_sensor);
     ambient_sensor.get_ctrl().switch_state();
-    sensors[0].setup(sensor_interface::I2C_1, sensor_type::BME_280, &ambient_sensor,
+    sensors[0].setup(sensor_interface::ADC, sensor_type::ADC, &ambient_sensor,
             storage_unit_type::TEMPERATURE_0, storage_unit_type::HUMIDITY_0,
-            storage_unit_type::PRESSURE_0);
+            storage_unit_type::PRESSURE_0, storage_unit_type::VOLTAGE);
+    sensors[1].setup(sensor_interface::I2C_2_14, sensor_type::BME_280, &ambient_sensor,
+            storage_unit_type::TEMPERATURE_0, storage_unit_type::HUMIDITY_0,
+            storage_unit_type::PRESSURE_0, storage_unit_type::VOLTAGE);
     Serial.println("setup ended.");
 }
 
