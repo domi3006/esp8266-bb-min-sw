@@ -12,7 +12,8 @@ void sensor::setup(enum sensor_interface::sensor_interface intf,
         enum sensor_type::sensor_type typ, ambient_condition_sensor *cont,
         enum storage_unit_type::storage_unit_type temp,
         enum storage_unit_type::storage_unit_type hum,
-        enum storage_unit_type::storage_unit_type pres)
+        enum storage_unit_type::storage_unit_type pres,
+        enum storage_unit_type::storage_unit_type volt)
 {
     interface = intf;
     type = typ;
@@ -20,6 +21,7 @@ void sensor::setup(enum sensor_interface::sensor_interface intf,
     storage_unit_temp = temp;
     storage_unit_hum = hum;
     storage_unit_pres = pres;
+    storage_unit_volt = volt;
 }
 
 void sensor::prepare_interface()
@@ -35,6 +37,7 @@ void sensor::prepare_interface()
                 i2c.begin(4,5);
                 break;
             }
+        case sensor_interface::ADC:
             {
                 break;
             }
@@ -58,6 +61,14 @@ void sensor::loop()
                 context->get_storage().update_value(storage_unit_pres,
                         (bme.readPressure()/100.0F), 0.5);
                 context->get_storage().update_value(storage_unit_hum, bme.readHumidity(), 1.0);
+                break;
+            }
+        case sensor_type::ADC:
+            {
+                float voltage;
+                // NOTE: R1=47k R2=9k1 => 6.16V max voltage => 1024 ADC steps => 0.00602 V/step
+                voltage = float(analogRead(0)) * 0.00602;
+                context->get_storage().update_value(storage_unit_volt, voltage, 0.1);
                 break;
             }
         default:
