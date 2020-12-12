@@ -68,7 +68,7 @@ void sensor::loop()
                 float voltage;
                 // NOTE: R1=47k R2=9k1 => 6.16V max voltage => 1024 ADC steps => 0.00602 V/step
                 voltage = float(analogRead(0)) * 0.00602;
-                context->get_storage().update_value(storage_unit_volt, voltage, 0.1);
+                context->get_storage().update_value(storage_unit_volt, voltage, 0.01);
                 break;
             }
         default:
